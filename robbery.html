@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Robbery Stats</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="sidebar">
+  <h2 class="logo">
+  <img src="logo.png" alt="Crime Logo" style="width: 24px; vertical-align: middle; margin-right: 2px;">
+  Crime Statistics
+</h2>
+  <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="assault.html">Assault</a></li>
+      <li><a href="burglary.html">Burglary</a></li>
+      <li><a href="robbery.html" class="active">Robbery</a></li>
+      <li><a href="vehicle_theft.html">Vehicle Theft</a></li>
+    </ul>
+  </div>
+
+  <div class="main-content">
+    <header>
+      <h1>Robbery Statistics (2000–2020)</h1>
+      <div class="toggle-btn" id="toggleBtn">☰</div>
+    </header>
+
+    <section class="chart-section">
+      <h2 style="margin-top: 30px;">Yearly Robbery Cases</h2>
+      <canvas id="robberyChart" width="600" height="300"></canvas>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const ctxRobbery = document.getElementById('robberyChart').getContext('2d');
+    const robberyChart = new Chart(ctxRobbery, {
+      type: 'line',
+      data: {
+        labels: [
+          '2000','2001','2002','2003','2004','2005','2006','2007','2008','2009',
+          '2010','2011','2012','2013','2014','2015','2016','2017','2018','2019'
+        ],
+        datasets: [{
+          label: 'Robbery Cases',
+          data: [
+            128,105,142,178,221,283,329,408,480,597,
+            718,839,1024,1316,1582,1903,2225,2601,3104,3583
+          ],
+          fill: false,
+          borderColor: '#ff9900',
+          tension: 0.3
+        }]
+      },
+      options: {
+        animation: {
+          duration: 2000,
+          easing: 'easeInOutQuart'
+        },
+        responsive: true,
+        plugins: {
+          legend: {
+            display: true
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
+
+
+

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Responsive Admin Dashboard</title>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.6);
+    }
+
+    .modal-content {
+      background-color: #1e1e2f;
+      margin: 10% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 90%;
+      max-width: 800px;
+      border-radius: 10px;
+      color: #fff;
+    }
+
+    .close {
+      color: #f54242;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .year-select {
+      margin-top: 10px;
+      padding: 6px;
+      font-size: 16px;
+      background-color: #2e2e44;
+      color: #fff;
+      border: 1px solid #444;
+      border-radius: 5px;
+    }
+
+    .chart-preview a#barPreview {
+      grid-column: span 2;
+    }
+
+    .chart-preview canvas {
+      width: 100% !important;
+      height: 150px !important;
+    }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <h2 class="logo">
+    <img src="logo.png" alt="Crime Logo" style="width: 24px; vertical-align: middle; margin-right: 2px;">
+    Crime Statistics
+  </h2>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="assault.html">Assault</a></li>
+    <li><a href="burglary.html">Burglary</a></li>
+    <li><a href="robbery.html">Robbery</a></li>
+    <li><a href="vehicle_theft.html">Vehicle Theft</a></li>
+  </ul>
+</div>
+
+<div class="main-content">
+  <header>
+    <h1>Welcome, User!</h1>
+    <div class="toggle-btn" id="toggleBtn">☰</div>
+  </header>
+
+  <h2 class="section-title">Total Number of Criminal Cases (2000–2020)</h2>
+
+  <section class="dashboard-cards">
+    <a href="assault.html" class="card">Assault<br><strong>43,964</strong></a>
+    <a href="burglary.html" class="card">Burglary<br><strong>44,139</strong></a>
+    <a href="robbery.html" class="card">Robbery<br><strong>21,766</strong></a>
+    <a href="vehicle_theft.html" class="card">Vehicle Theft<br><strong>29,407</strong></a>
+  </section>
+
+  <h2 class="section-title">Crime Trends Preview (2000–2020)</h2>
+
+  <section class="chart-preview">
+    <a href="assault.html">
+      <div><strong>Assault</strong></div>
+      <canvas id="assaultPreview"></canvas>
+    </a>
+    <a href="burglary.html">
+      <div><strong>Burglary</strong></div>
+      <canvas id="burglaryPreview"></canvas>
+    </a>
+    <a href="robbery.html">
+      <div><strong>Robbery</strong></div>
+      <canvas id="robberyPreview"></canvas>
+    </a>
+    <a href="vehicle_theft.html">
+      <div><strong>Vehicle Theft</strong></div>
+      <canvas id="vehicleTheftPreview"></canvas>
+    </a>
+    <a href="#" id="barPreview">
+      <div><strong>Yearly Breakdown</strong></div>
+      <canvas id="barPreviewCanvas"></canvas>
+    </a>
+  </section>
+</div>
+
+<!-- Bar Chart Modal -->
+<div id="barModal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeBarModal">&times;</span>
+    <h2 id="barTitle">Crimes in 2000</h2>
+    <label for="yearFilter">Select Year:</label>
+    <select id="yearFilter" class="year-select"></select>
+    <canvas id="barChart" style="margin-top: 20px;"></canvas>
+  </div>
+</div>
+
+<script>
+  const toggleBtn = document.getElementById('toggleBtn');
+  const sidebar = document.querySelector('.sidebar');
+  toggleBtn.addEventListener('click', () => sidebar.classList.toggle('show'));
+
+  const previewData = {
+    assault: [523, 819, 1215, 1769, 2339, 3025, 3719, 4205],
+    burglary: [349, 429, 752, 1194, 1981, 3191, 4801, 6203],
+    robbery: [128, 178, 329, 597, 1024, 1903, 3104, 3583],
+    vehicleTheft: [223, 308, 529, 869, 1498, 2578, 3776, 4359]
+  };
+
+  function createPreviewChart(canvasId, data, color) {
+    const ctx = document.getElementById(canvasId).getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ["2000", "2003", "2006", "2009", "2012", "2015", "2018", "2020"],
+        datasets: [{
+          data: data,
+          borderColor: color,
+          borderWidth: 2,
+          fill: false,
+          tension: 0.3,
+          pointRadius: 3,
+          pointBackgroundColor: color
+        }]
+      },
+      options: {
+        plugins: { legend: { display: false }},
+        scales: {
+          x: { title: { display: true, text: "Year" }},
+          y: { title: { display: true, text: "Cases" }}
+        },
+        maintainAspectRatio: false,
+        responsive: true,
+      }
+    });
+  }
+
+  createPreviewChart('assaultPreview', previewData.assault, '#e74c3c');
+  createPreviewChart('burglaryPreview', previewData.burglary, '#2980b9');
+  createPreviewChart('robberyPreview', previewData.robbery, '#8e44ad');
+  createPreviewChart('vehicleTheftPreview', previewData.vehicleTheft, '#16a085');
+
+  const yearlyCrimeData = {
+    2000: { assault: 523, burglary: 349, robbery: 128, vehicleTheft: 223 },
+    2001: { assault: 610, burglary: 287, robbery: 105, vehicleTheft: 195 },
+    2002: { assault: 724, burglary: 365, robbery: 142, vehicleTheft: 217 },
+    2003: { assault: 819, burglary: 429, robbery: 178, vehicleTheft: 308 },
+    2004: { assault: 897, burglary: 516, robbery: 221, vehicleTheft: 393 },
+    2005: { assault: 1054, burglary: 643, robbery: 283, vehicleTheft: 472 },
+    2006: { assault: 1215, burglary: 752, robbery: 329, vehicleTheft: 529 },
+    2007: { assault: 1382, burglary: 864, robbery: 408, vehicleTheft: 648 },
+    2008: { assault: 1567, burglary: 1012, robbery: 480, vehicleTheft: 742 },
+    2009: { assault: 1769, burglary: 1194, robbery: 597, vehicleTheft: 869 },
+    2010: { assault: 1946, burglary: 1421, robbery: 718, vehicleTheft: 1024 },
+    2011: { assault: 2113, burglary: 1652, robbery: 839, vehicleTheft: 1263 },
+    2012: { assault: 2339, burglary: 1981, robbery: 1024, vehicleTheft: 1498 },
+    2013: { assault: 2562, burglary: 2357, robbery: 1316, vehicleTheft: 1865 },
+    2014: { assault: 2798, burglary: 2732, robbery: 1582, vehicleTheft: 2187 },
+    2015: { assault: 3025, burglary: 3191, robbery: 1903, vehicleTheft: 2578 },
+    2016: { assault: 3251, burglary: 3669, robbery: 2225, vehicleTheft: 2957 },
+    2017: { assault: 3484, burglary: 4223, robbery: 2601, vehicleTheft: 3304 },
+    2018: { assault: 3719, burglary: 4801, robbery: 3104, vehicleTheft: 3776 },
+    2019: { assault: 3962, burglary: 5498, robbery: 3583, vehicleTheft: 4359 },
+    2020: { assault: 4205, burglary: 6203, robbery: 0, vehicleTheft: 0 },
+  };
+
+  const barModal = document.getElementById("barModal");
+  const barPreview = document.getElementById("barPreview");
+  const yearFilter = document.getElementById("yearFilter");
+  const barTitle = document.getElementById("barTitle");
+
+  const barPreviewChart = new Chart(document.getElementById('barPreviewCanvas').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: ["Assault", "Burglary", "Robbery", "Vehicle Theft"],
+      datasets: [{
+        label: "Cases in 2000",
+        data: Object.values(yearlyCrimeData[2000]),
+        backgroundColor: ['#e74c3c', '#2980b9', '#f1c40f', '#9b59b6']
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      scales: {
+        x: { title: { display: true, text: "Number of Crimes" }},
+        y: { title: { display: true, text: "Type of Crime" }}
+      },
+      plugins: { legend: { display: false }},
+      responsive: true,
+      maintainAspectRatio: false,
+    }
+  });
+
+  const ctxBar = document.getElementById("barChart").getContext("2d");
+  const barChart = new Chart(ctxBar, {
+    type: 'bar',
+    data: {
+      labels: ["Assault", "Burglary", "Robbery", "Vehicle Theft"],
+      datasets: [{
+        label: 'Number of Crimes',
+        backgroundColor: ['#e74c3c', '#2980b9', '#f1c40f', '#9b59b6'],
+        data: Object.values(yearlyCrimeData[2000])
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      scales: {
+        x: { title: { display: true, text: "Number of Crimes" }},
+        y: { title: { display: true, text: "Type of Crime" }}
+      },
+      responsive: true,
+      maintainAspectRatio: false,
+    }
+  });
+
+  for (let year = 2000; year <= 2020; year++) {
+    const opt = document.createElement("option");
+    opt.value = year;
+    opt.textContent = year;
+    yearFilter.appendChild(opt);
+  }
+
+  function updateBarChart(year) {
+    const data = yearlyCrimeData[year];
+    barChart.data.datasets[0].data = Object.values(data);
+    barTitle.textContent = `Crimes in ${year}`;
+    barChart.update();
+
+    barPreviewChart.data.datasets[0].data = Object.values(data);
+    barPreviewChart.data.datasets[0].label = `Cases in ${year}`;
+    barPreviewChart.update();
+  }
+
+  barPreview.addEventListener("click", () => {
+    barModal.style.display = "block";
+    yearFilter.value = "2000";
+    updateBarChart("2000");
+  });
+
+  yearFilter.addEventListener("change", () => {
+    updateBarChart(yearFilter.value);
+  });
+
+  document.getElementById("closeBarModal").addEventListener("click", () => {
+    barModal.style.display = "none";
+  });
+
+  window.addEventListener("click", (event) => {
+    if (event.target === barModal) barModal.style.display = "none";
+  });
+</script>
+
+</body>
+</html>
+

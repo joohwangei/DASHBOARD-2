@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vehicle Theft Stats</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="sidebar">
+  <h2 class="logo">
+  <img src="logo.png" alt="Crime Logo" style="width: 24px; vertical-align: middle; margin-right: 2px;">
+  Crime Statistics
+</h2>
+  <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="assault.html">Assault</a></li>
+      <li><a href="burglary.html">Burglary</a></li>
+      <li><a href="robbery.html">Robbery</a></li>
+      <li><a href="vehicle_theft.html" class="active">Vehicle Theft</a></li>
+    </ul>
+  </div>
+
+  <div class="main-content">
+    <header>
+      <h1>Vehicle Theft Statistics (2000–2020)</h1>
+      <div class="toggle-btn" id="toggleBtn">☰</div>
+    </header>
+
+    <section class="chart-section">
+      <h2 style="margin-top: 30px;">Yearly Vehicle Theft Cases</h2>
+      <canvas id="vehicleTheftChart" width="600" height="300"></canvas>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const ctxVehicle = document.getElementById('vehicleTheftChart').getContext('2d');
+    const vehicleChart = new Chart(ctxVehicle, {
+      type: 'line',
+      data: {
+        labels: [
+          '2000','2001','2002','2003','2004','2005','2006','2007','2008','2009',
+          '2010','2011','2012','2013','2014','2015','2016','2017','2018','2019'
+        ],
+        datasets: [{
+          label: 'Vehicle Theft Cases',
+          data: [
+            223,195,217,308,393,472,529,648,742,869,
+            1024,1263,1498,1865,2187,2578,2957,3304,3776,4359
+          ],
+          fill: false,
+          borderColor: '#28a745',
+          tension: 0.3
+        }]
+      },
+      options: {
+        animation: {
+          duration: 2000,
+          easing: 'easeInOutSine'
+        },
+        responsive: true,
+        plugins: {
+          legend: {
+            display: true
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
+
+
+

@@ -1,0 +1,244 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  user-select: none;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  background-color: #1e1e2f;
+  color: #e0e0e0;
+  overflow-x: hidden;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #12121c;
+  padding: 20px 0;
+  position: fixed;
+  height: 100vh;
+  border-right: 1px solid #333;
+  transition: left 0.3s ease;
+  left: 0;
+  z-index: 1000;
+}
+
+.sidebar h2.logo {
+  color: #f54242;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  user-select: text;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar ul li a {
+  display: block;
+  padding: 15px 25px;
+  color: #bbb;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.3s, color 0.3s, border-left-color 0.3s;
+  border-left: 4px solid transparent;
+  white-space: nowrap;
+}
+
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
+  background-color: #2a2a3d;
+  color: #fff;
+  border-left-color: #f54242;
+}
+
+.main-content {
+  margin-left: 250px;
+  padding: 20px 30px;
+  flex-grow: 1;
+  background-color: #252537;
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #f54242;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #333;
+}
+
+.toggle-btn {
+  display: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #f54242;
+  background: none;
+  border: none;
+  user-select: none;
+  transition: color 0.3s;
+}
+
+.toggle-btn:hover {
+  color: #ff6b6b;
+}
+
+.dashboard-cards {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+}
+
+.dashboard-cards a.card {
+  text-decoration: none;
+  color: inherit;
+  background-color: #2e2e44;
+  padding: 22px 24px;
+  border-left: 6px solid #f54242;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.45);
+  border-radius: 12px;
+  transition: transform 0.25s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  display: block;
+  user-select: none;
+}
+
+.dashboard-cards a.card:hover {
+  transform: translateY(-6px);
+  background-color: #3a3a55;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+}
+
+.card strong {
+  font-size: 22px;
+  color: #fff;
+  display: block;
+  margin-bottom: 6px;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    left: -250px;
+    position: fixed;
+    height: 100vh;
+  }
+
+  .sidebar.show {
+    left: 0;
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: 20px 15px 40px;
+  }
+
+  .toggle-btn {
+    display: block;
+  }
+}
+
+.section-title {
+  margin-top: 50px;
+  margin-bottom: 20px;
+  color: #f54242;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.chart-preview {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 40px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.chart-preview a {
+  background-color: #1e293b;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  padding: 18px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+  text-decoration: none;
+  width: 48%;
+  color: #f1f5f9;
+  user-select: none;
+  outline-offset: 2px;
+}
+
+.chart-preview a:hover,
+.chart-preview a:focus-visible {
+  transform: scale(1.06);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  outline: none;
+}
+
+.chart-preview canvas {
+  width: 100% !important;
+  height: auto !important;
+  margin-top: 14px;
+  transition: transform 0.3s ease;
+  pointer-events: none;
+}
+
+.chart-preview a:hover canvas,
+.chart-preview a:focus-visible canvas {
+  transform: scale(1.08);
+}
+
+/* ===== Modal and Chart Popup Fixes ===== */
+
+.modal-content {
+  max-width: 700px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  background-color: #252537;
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  margin: 40px auto;
+  color: #e0e0e0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
+}
+
+#barChart,
+#lineChart {
+  width: 100% !important;
+  height: 400px !important;
+  max-width: 100%;
+  max-height: 400px;
+  display: block;
+  margin: 0 auto;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.65);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1500;
+}
+
+.modal.show {
+  display: flex;
+}
+
